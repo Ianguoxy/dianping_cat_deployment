@@ -2,10 +2,13 @@
 
 Env:
 CAT 3.0
-Ubuntu 14.04  
+
+Ubuntu 14.04
+
 1.Install docker and docker-compose 
 
 https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
 https://docs.docker.com/compose/install/
 
 2. download cat-master from github.
@@ -24,6 +27,7 @@ https://docs.docker.com/compose/install/
 
 
 3. Update Config file:
+
 1> create mysql schema in own db.
    
       /cat-master$ cd script
@@ -147,6 +151,7 @@ https://docs.docker.com/compose/install/
 5.visit http://localhost:8080/cat/r  the page shows "CAT服务端有问题" 
          
 6. Update CAT Server config 
+
     Cat有三个重要配置, 分别是: ClientConfig, RouterConfig 和 ServerConfig, 分别代表客户端信息, 服务路由信息以及服务端配置信息.
 
     ClientConfig 配置(即client.xml 配置文件):
