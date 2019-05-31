@@ -1,7 +1,7 @@
 # How to use docker to deploy the CAT server.
 
 Env:
-CAT 3.0
+CAT 3.0.0
 
 Ubuntu 14.04
 
@@ -154,11 +154,11 @@ https://docs.docker.com/compose/install/
 
     Cat有三个重要配置, 分别是: ClientConfig, RouterConfig 和 ServerConfig, 分别代表客户端信息, 服务路由信息以及服务端配置信息.
 
-    ClientConfig 配置(即client.xml 配置文件):
+    ClientConfig 配置(即client.xml 配置文件):　配置对应的那个cat server的ip，因此每个客户端都需要在目录/data/appdatas/cat 下面添加改配置文件.
     每个客户端对应一组对服务器以及一个domain信息, 客户端默认从这组服务中的一个节点上拉取路由配置信息. 客户端的查询参数里带有domain信息, 服务端的路由配置里如果有相应的domain则返回相应domain下的一组server信息, 如果没有则返回default servers.
     返回的路由信息包含一组日志服务节点以及采样比例(sample), 日志服务节点包含权重, socket端口号以及id(ip). 采样比例是指客户端的cat日志多少次里抽样发送1次, 例如0.2则代表记录5次日志会忘服务端发送1次.
 
-    RouterConfig 配置(通过 url 配置):
+    RouterConfig 配置(通过 url 配置):　
     客户端拉取到router信息后, 和router的日志server列表中第一个可用server之间建立netty channel, 并启动一个线程对channel进行维护. 对channel的维护主要包括:
     1. 比较服务端路由信息和客户端上次抓取的是否一致, 不一致则更新客户端router信息, 并重新建立新channel.
     2. 判断当前channel状态, 如果状态不正常, 则从router的server列表里重新找出一个能用的server建立channel.
@@ -200,8 +200,9 @@ https://docs.docker.com/compose/install/
         }}]
         
 
- 2>Update config at http://localhost:8080/cat/s/config    u:admin  p:admin
-    (1)ServerConfig: http://localhost:8080/cat/s/config?op=serverConfigUpdate
+2>Update config at http://localhost:8080/cat/s/config    u:admin  p:admin
+ 
+  (1)ServerConfig: http://localhost:8080/cat/s/config?op=serverConfigUpdate
     
           <?xml version="1.0" encoding="utf-8"?>
             <server-config>
@@ -242,7 +243,7 @@ https://docs.docker.com/compose/install/
                </server>
             </server-config>
             
-  (2)RouterConfig: http://localhost:8080/cat/s/config?op=routerConfigUpdate
+ (2)RouterConfig: http://localhost:8080/cat/s/config?op=routerConfigUpdate
       
       
           <?xml version="1.0" encoding="utf-8"?>
@@ -260,8 +261,28 @@ https://docs.docker.com/compose/install/
                </domain>
             </router-config>
 
+  (3)ClientConfig: client.xml  
   
-  3> restart tomcat to make the updated configuration effect
+        #进入cat server的 container 内
+        $ sudo docker exec -it 603d27193af5 /bin/bash 
+        [root@603d27193af5 app]# cd /data/appdatas/cat
+        [root@603d27193af5 cat]# vi client.xml
+                <?xml version="1.0" encoding="utf-8"?>
+                <config mode="client">
+                    <servers>
+                        <server ip="172.19.0.2" port="2280" http-port="8080"/>
+                    </servers>
+                </config>
+        
+        [root@603d27193af5 app] cd /usr/local/tomcat/bin
+        [root@603d27193af5 bin] ./shutdown.sh
+        ...
+        [root@603d27193af5 bin] ./startup.sh
+        ...
+        Tomcat started...
+        
+  
+3> restart tomcat to make the updated configuration effect
   
          /cat-master/docker$ docker-compose restart cat   #restart cat server tomcat
         
