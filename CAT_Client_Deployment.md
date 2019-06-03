@@ -49,3 +49,8 @@ https://github.com/dianping/cat/blob/master/lib/_/preparations.md
  
  https://github.com/dianping/cat/blob/master/lib/java/README.md
  
+ 
+ 
+ 3. add config files in your project.
+ 
+https://cloud.tencent.com/developer/article/1430661
