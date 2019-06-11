@@ -51,7 +51,9 @@ https://docs.docker.com/compose/install/
 
     /cat-master$ cd docker
     /cat-master/docker$ ls
+    
     client.xml  datasources.sh  datasources.xml  docker-compose.yml  Dockerfile
+    
     $sudo vim docker-compose.yml
 
          ------------------------------------------------------------------------------------- 
@@ -288,4 +290,7 @@ https://docs.docker.com/compose/install/
         
   
 7.visit http://localhost:8080/cat/r  the page shows "CAT服务端正常" 
+
+8. use docker file without docker-compose to build.
+
   
